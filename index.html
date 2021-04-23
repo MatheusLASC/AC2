@@ -20,6 +20,7 @@
     <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
     <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+    <script src="Meshes.js"></script> 
 
     <style>
         html,
@@ -42,10 +43,12 @@
 <body>
     <canvas id="renderCanvas"></canvas>
     <script>
+        
         var canvas = document.getElementById("renderCanvas");
         var engine = null;
         var scene = null;
         var sceneToRender = null;
+        
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
         const createScene = function () {
 
@@ -53,19 +56,63 @@
 
             createLightAndCamera();
             createSkybox();
+            createHighMap();
+            
 
+            /*---MESHES---*/
+            //dragão
+            rot = new BABYLON.Vector3(0, Math.PI / 2, 0);
+            pos = new BABYLON.Vector3(3.4, -2, 0);
+            scale =  new BABYLON.Vector3(5,5,5);
+            obj = new Meshes("https://models.babylonjs.com/Georgia-Tech-Dragon/","dragon.babylon", pos, rot, scale);
+
+            //caveira
+            rot1 = new BABYLON.Vector3(0, -Math.PI/2, 0);
+            pos1 = new BABYLON.Vector3(-4, -1.7, 2);
+            scale1 =  new BABYLON.Vector3(0.01,0.01,0.01);
+            obj1 = new Meshes( "/assets/meshes/", "skull.babylon", pos1, rot1, scale1);
+
+           //coelho
+           rot2 = new BABYLON.Vector3(0, Math.PI / 2, 0);
+           pos2 = new BABYLON.Vector3(1, -2, 1);
+           scale2 =  new BABYLON.Vector3(3,3,3);
+           obj2 = new Meshes("/assets/meshes/", "StanfordBunny.obj", pos2, rot2, scale2);
+
+           rot3 = new BABYLON.Vector3(0, Math.PI / 2, 0);
+           pos3 = new BABYLON.Vector3(1, -2, 2);
+           scale3 =  new BABYLON.Vector3(0.05,0.05,0.05);
+           obj3 = new Meshes("/assets/meshes/Free rock/", "Rock_1.obj", pos3, rot3, scale3);
+            /*===meshes===*/
+
+
+            //utilizado para debugar, comente para rodar "normal"
+            scene.debugLayer.show();
 
             return scene;
         };
 
-        function createLightAndCamera () {
-            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
+
+
+        function createHighMap()
+        {
+            const largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat");
+            largeGroundMat.diffuseTexture = new BABYLON.Texture("/assets/images/arena.jpg");
+    
+            const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "/assets/images/mapa.jpeg", {width:10, height:10, subdivisions: 10, minHeight:0, maxHeight: 10});
+            largeGround.material = largeGroundMat;
+
+            largeGround.position.y = -2;
+        }
+
+        function createLightAndCamera () { 
+            // Parameters: alpha, beta, radius, target position, scene
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 5, new BABYLON.Vector3(0, 0, 0));
             camera.attachControl(canvas, true);
-            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0)); 
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
         }
 
         function createSkybox () {
-            const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:150}, scene);
+            const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:10}, scene);
             const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
             skyboxMaterial.backFaceCulling = false;
             skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("/assets/images/skybox4", scene);
