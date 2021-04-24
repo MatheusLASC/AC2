@@ -1,1 +1,0 @@
-model from https://www.cc.gatech.edu/projects/large_models/dragon.html
