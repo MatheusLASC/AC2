@@ -53,7 +53,7 @@
 
             createLightAndCamera();
             createSkybox();
-
+            createHighMap();
 
             return scene;
         };
@@ -73,6 +73,18 @@
             skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
             skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
             skybox.material = skyboxMaterial;
+        }
+
+        function createHighMap()
+        {
+           
+            const largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat");
+            largeGroundMat.diffuseTexture = new BABYLON.Texture("/assets/images/arena.jpg");
+    
+            const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "/assets/images/mapa.jpeg", {width:150, height:150, subdivisions: 20, minHeight:0, maxHeight: 10});
+            largeGround.material = largeGroundMat;
+
+            largeGround.position.y = -70;
         }
 
         var engine;
