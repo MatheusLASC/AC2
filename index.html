@@ -21,6 +21,7 @@
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
     <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
     <script src="Meshes.js"></script> 
+    <script src="Hero.js"></script>
 
     <style>
         html,
@@ -156,6 +157,13 @@
                 inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
             }));
 
+            //Cilindro para área útil
+            var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height:1.75});
+            cylinder.position.y = -1.5;
+            cylinder.scaling.x = 10;
+            cylinder.scaling.z = 10;
+            cylinder.visibility = 0;
+
             BABYLON.SceneLoader.ImportMesh("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb", scene, function (newMeshes, particleSystems, skeletons, animationGroups) {
                 var hero = newMeshes[0];
 
@@ -185,13 +193,31 @@
                 //Rendering loop (executed for everyframe)
                 scene.onBeforeRenderObservable.add(() => {
                     var keydown = false;
-                    //Manage the movements of the character (e.g. position, direction)
+                   
                     if (inputMap["w"]) {
-                        hero.moveWithCollisions(hero.forward.scaleInPlace(heroSpeed));
+                        
+                        if (hero.intersectsMesh(cylinder, false)) {
+                            heroSpeed = 0.03;
+                            hero.moveWithCollisions(hero.forward.scaleInPlace(heroSpeed));
+                        } else {
+                            heroSpeed = 0;
+                            idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
+                            hero.moveWithCollisions(hero.forward.scaleInPlace(heroSpeed));
+                        }
+
                         keydown = true;
+
                     }
                     if (inputMap["s"]) {
+
+                    if (hero.intersectsMesh(cylinder, true)) {
+                        heroSpeedBackwards = 0.01;
                         hero.moveWithCollisions(hero.forward.scaleInPlace(-heroSpeedBackwards));
+                    } else {
+                        heroSpeedBackwards = 0;
+                        idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
+                    }
+                      
                         keydown = true;
                     }
                     if (inputMap["a"]) {
