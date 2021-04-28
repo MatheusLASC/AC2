@@ -1,22 +1,35 @@
-class {
-    constructor() {
-        BABYLON.SceneLoader.ImportMesh("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb", scene, function (newMeshes, particleSystems, skeletons, animationGroups) {
-            var hero = newMeshes[0];
+class Hero {
+    hero = null;
+    hero1 = null;
 
-            posHero = new BABYLON.Vector3(0, -2, 0);
-            sclHero = new BABYLON.Vector3(0.05,0.05,0.05);
+    constructor(cam, scene) {
+        var inputMap = {};
+            scene.actionManager = new BABYLON.ActionManager(scene);
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
+                inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
+                inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
+
+        BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb").then((result) => {
+           this.hero = result.meshes[0];  
+
+           var posHero = new BABYLON.Vector3(0, -1.98, 0);
+           var sclHero = new BABYLON.Vector3(0.05,0.05,0.05);
             
             //Scale the model down        
-            hero.scaling.scaleInPlace(0.1);
-            hero.position = posHero;
-            hero.scaling = sclHero;
+            this.hero.scaling.scaleInPlace(0.1);
+            this.hero.position = posHero;
+            this.hero.scaling = sclHero;
                 
+            
             //Lock camera on the character 
-            cam.target = hero;
+            cam.target = this.hero;
 
             //Hero character variables 
-            var heroSpeed = 0.03;
-            var heroSpeedBackwards = 0.01;
+            var heroSpeed = 0.05;
+            var heroSpeedBackwards = 0.03;
             var heroRotationSpeed = 0.1;
 
             var animating = true;
@@ -29,39 +42,25 @@ class {
             //Rendering loop (executed for everyframe)
             scene.onBeforeRenderObservable.add(() => {
                 var keydown = false;
-               
+
                 if (inputMap["w"]) {
-                    
-                    if (hero.intersectsMesh(cylinder, false)) {
-                        heroSpeed = 0.03;
-                        hero.moveWithCollisions(hero.forward.scaleInPlace(heroSpeed));
-                    } else {
-                        heroSpeed = 0;
-                        idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
-                        hero.moveWithCollisions(hero.forward.scaleInPlace(heroSpeed));
-                    }
-
+                    this.hero.position.y = -1.98;
+                    this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(heroSpeed));
                     keydown = true;
-
                 }
                 if (inputMap["s"]) {
+                    this.hero.position.y = -1.98;
+                    this.heroSpeedBackwards = 0.03
+                    this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(-heroSpeedBackwards));
 
-                if (hero.intersectsMesh(cylinder, true)) {
-                    heroSpeedBackwards = 0.01;
-                    hero.moveWithCollisions(hero.forward.scaleInPlace(-heroSpeedBackwards));
-                } else {
-                    heroSpeedBackwards = 0;
-                    idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
-                }
-                  
                     keydown = true;
                 }
                 if (inputMap["a"]) {
-                    hero.rotate(BABYLON.Vector3.Up(), -heroRotationSpeed);
+                    this.hero.rotate(BABYLON.Vector3.Up(), -heroRotationSpeed);
                     keydown = true;
                 }
                 if (inputMap["d"]) {
-                    hero.rotate(BABYLON.Vector3.Up(), heroRotationSpeed);
+                    this.hero.rotate(BABYLON.Vector3.Up(), heroRotationSpeed);
                     keydown = true;
                 }
                 if (inputMap["b"]) {
@@ -104,6 +103,9 @@ class {
                 }
             });
         });
+    }// constructor 
 
-    }
-  }
+}
+
+/*
+            */
