@@ -49,7 +49,9 @@
         var engine = null;
         var scene = null;
         var sceneToRender = null;
-        
+        var ball = [];
+        var i=0;
+        var p=-6,pa=0,s=1;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
         const createScene = function () {
 
@@ -59,6 +61,7 @@
             createSkybox();
             createHighMap();
             
+           
 
            /*---MESHES---*/
            //dragão
@@ -163,6 +166,29 @@
             cylinder.scaling.x = 10;
             cylinder.scaling.z = 10;
             cylinder.visibility = 0;
+
+            // Criando bolas de neve
+            for(i=0;i<10;i++)
+            {
+                tpos = new BABYLON.Vector3(p, -1.6, pa);
+                tscale =  new BABYLON.Vector3(s,s,s);
+                trot =  new BABYLON.Vector3(0,0,0);
+                ball[i] =  new Meshes("https://models.babylonjs.com/Marble/marble/", "marble.gltf", tpos,trot,tscale, 0);
+                p+=1.40;
+                s+=0.25;
+
+                if(i%2 == 0)
+                {
+                    pa = 3.5;
+                    
+                }
+                else
+                {
+                    pa = -3.5;
+                }
+            }
+
+     
 
             BABYLON.SceneLoader.ImportMesh("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb", scene, function (newMeshes, particleSystems, skeletons, animationGroups) {
                 var hero = newMeshes[0];
