@@ -47,6 +47,7 @@ class Hero {
                 if (inputMap["w"]) {
                     if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
                         bar.explodeBar(bar.getCylinder());
+                        bar.explosionSound(scene);
                         bar.removeAll();
                     } 
                     this.hero.position.y = -1.98;
