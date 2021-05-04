@@ -1,8 +1,7 @@
 class Hero {
     hero = null;
-    hero1 = null;
 
-    constructor(cam, scene) {
+    constructor(cam, scene, bar) {
         var inputMap = {};
             scene.actionManager = new BABYLON.ActionManager(scene);
             scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
@@ -39,16 +38,24 @@ class Hero {
             const idleAnim = scene.getAnimationGroupByName("Idle");
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
+            //scene.registerBeforeRender(function () {});
+
             //Rendering loop (executed for everyframe)
             scene.onBeforeRenderObservable.add(() => {
                 var keydown = false;
 
                 if (inputMap["w"]) {
+                    if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
+                        bar.removeAll();
+                    } 
                     this.hero.position.y = -1.98;
                     this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(heroSpeed));
                     keydown = true;
                 }
                 if (inputMap["s"]) {
+                    if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
+                        bar.removeAll();
+                    } 
                     this.hero.position.y = -1.98;
                     this.heroSpeedBackwards = 0.03
                     this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(-heroSpeedBackwards));
