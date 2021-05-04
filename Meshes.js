@@ -10,4 +10,8 @@ class Meshes {
             this.meshes.material = mat;
         });
     }
+
+    getMesh() {
+        return this.meshes;
+    }
 }

@@ -22,6 +22,7 @@
     <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
     <script src="Meshes.js"></script> 
     <script src="Hero.js"></script>
+    <script src="barrel.js"></script>
 
     <style>
         html,
@@ -130,8 +131,6 @@
            
            obj6 = new Meshes("/assets/meshes/MeshesLibrary-master/", "roundedCube.glb", pos6, rot6, scale6, 1, cubeMat);
            obj6.material = cubeMat;
-
-            
            /*===meshes===*/
 
 
@@ -140,32 +139,29 @@
             barPos = new BABYLON.Vector3(-1, -2, 0);
             barScl =  new BABYLON.Vector3(0.01,0.01,0.01);
            
-            var bar = new Meshes("https://models.babylonjs.com/", "ExplodingBarrel.glb", barPos, barRot, barScl,0);
-             
+            var bar = new Barrel("https://models.babylonjs.com/", "ExplodingBarrel.glb", barPos, barRot, barScl,0);
             /*===barril 1===*/
 
             //Cilindro para área útil
-            cylinderScl = new BABYLON.Vector3(18,-3,18);
+            createLimit(16);
+            //cilindro//            
+        
+            var player = new Hero(cam,scene,bar);
+           // createHero(cam,scene,bar);
+
+            //utilizado para debugar, comente para rodar "normal"
+            //scene.debugLayer.show();
+            
+            return scene;
+        };
+        
+        function createLimit(num) {
+            cylinderScl = new BABYLON.Vector3(num,-3,num);
             var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height:1.75});
             cylinder.scaling = cylinderScl;
             cylinder.checkCollisions = true;
             cylinder.visibility = 0;
-            //cilindro//            
-        
-            var player = new Hero(cam,scene);
-            
-
-           /* scene.registerBeforeRender(function () {
-                if(this.hero.intersectsMesh(cylinder,false)){
-                console.log("puta que pariu");
-                }
-            });*/
-
-            //utilizado para debugar, comente para rodar "normal"
-            scene.debugLayer.show();
-
-            return scene;
-        };
+        }
 
         function createHighMap()
         {
@@ -251,6 +247,117 @@
             
         }
 
+
+        function createHero(cam,scene,bar) {
+            var inputMap = {};
+            scene.actionManager = new BABYLON.ActionManager(scene);
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
+                inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
+                inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
+
+            BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb").then((result) => {
+            this.hero = result.meshes[0];  
+
+            var posHero = new BABYLON.Vector3(0, -1.98, 0);
+            var sclHero = new BABYLON.Vector3(0.05,0.05,0.05);
+                
+                //Scale the model down        
+                this.hero.scaling.scaleInPlace(0.1);
+                this.hero.position = posHero;
+                this.hero.scaling = sclHero;
+                    
+                
+                //Lock camera on the character 
+                cam.target = this.hero;
+
+                //Hero character variables 
+                var heroSpeed = 0.05;
+                var heroSpeedBackwards = 0.03;
+                var heroRotationSpeed = 0.1;
+
+                var animating = true;
+
+                const walkAnim = scene.getAnimationGroupByName("Walking");
+                const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
+                const idleAnim = scene.getAnimationGroupByName("Idle");
+                const sambaAnim = scene.getAnimationGroupByName("Samba");
+
+                scene.registerBeforeRender(function () {
+
+                    if (player.intersectsMesh(bar, false)) {
+                        console.log("funcionou");
+                    } 
+
+                });
+
+                //Rendering loop (executed for everyframe)
+                scene.onBeforeRenderObservable.add(() => {
+                    var keydown = false;
+
+                    if (inputMap["w"]) {
+                        this.hero.position.y = -1.98;
+                        this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(heroSpeed));
+                        keydown = true;
+                    }
+                    if (inputMap["s"]) {
+                        this.hero.position.y = -1.98;
+                        this.heroSpeedBackwards = 0.03
+                        this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(-heroSpeedBackwards));
+
+                        keydown = true;
+                    }
+                    if (inputMap["a"]) {
+                        this.hero.rotate(BABYLON.Vector3.Up(), -heroRotationSpeed);
+                        keydown = true;
+                    }
+                    if (inputMap["d"]) {
+                        this.hero.rotate(BABYLON.Vector3.Up(), heroRotationSpeed);
+                        keydown = true;
+                    }
+                    if (inputMap["b"]) {
+                        keydown = true;
+                    }
+
+                    //Manage animations to be played  
+                    if (keydown) {
+                        if (!animating) {
+                            animating = true;
+                            if (inputMap["s"]) {
+                                //Walk backwards
+                                walkBackAnim.start(true, 1.0, walkBackAnim.from, walkBackAnim.to, false);
+                            }
+                            else if
+                                (inputMap["b"]) {
+                                //Samba!
+                                sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+                            }
+                            else {
+                                //Walk
+                                walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
+                            }
+                        }
+                    }
+                    else {
+
+                        if (animating) {
+                            //Default animation is idle when no key is down     
+                            idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
+
+                            //Stop all animations besides Idle Anim when no key is down
+                            sambaAnim.stop();
+                            walkAnim.stop();
+                            walkBackAnim.stop();
+
+                            //Ensure animation are played only once per rendering loop
+                            animating = false;
+                        }
+                    }
+                });
+            });
+        }
         
         var engine;
         var scene;
