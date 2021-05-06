@@ -1,7 +1,7 @@
 class Hero {
     hero = null;
 
-    constructor(cam, scene, bar) {
+    constructor(cam, scene, bar, balls) {
         var inputMap = {};
             scene.actionManager = new BABYLON.ActionManager(scene);
             scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {

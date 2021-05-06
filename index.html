@@ -23,6 +23,7 @@
     <script src="Meshes.js"></script> 
     <script src="Hero.js"></script>
     <script src="barrel.js"></script>
+    <script src="Colect.js"></script>
 
     <style>
         html,
@@ -146,11 +147,14 @@
             createLimit(16);
             //cilindro//            
         
-            var player = new Hero(cam,scene,bar);
-           // createHero(cam,scene,bar);
+            var balls = new Colect();
 
+            var player = new Hero(cam,scene,bar,balls);
+           // createHero(cam,scene,bar);
+          
             //utilizado para debugar, comente para rodar "normal"
             //scene.debugLayer.show();
+
             
             return scene;
         };
