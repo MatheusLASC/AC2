@@ -38,13 +38,15 @@ class Hero {
             const idleAnim = scene.getAnimationGroupByName("Idle");
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
-            //scene.registerBeforeRender(function () {});
-
             //Rendering loop (executed for everyframe)
             scene.onBeforeRenderObservable.add(() => {
                 var keydown = false;
 
                 if (inputMap["w"]) {
+/*                    if (this.hero.intersectsMesh(sphere, false)) {
+                        
+                    } */
+
                     if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
                         bar.explodeBar(bar.getCylinder());
                         bar.explosionSound(scene);
