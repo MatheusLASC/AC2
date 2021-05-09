@@ -6,13 +6,13 @@ class Barrel extends Meshes{
     constructor(url,sceneFile, pos, rot, scale, meshNum, mat) {
         super(url,sceneFile, pos, rot, scale, meshNum, mat);
 
-        var cylinderScl = new BABYLON.Vector3(0.4,-3, 0.4);
-        var cylPos = pos;
+        var cylinderScl = new BABYLON.Vector3(0.4,1, 0.4);
 
         this.cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height:0.1});
 
         this.cylinder.scaling = cylinderScl;
-        this.cylinder.position = cylPos;
+        this.cylinder.position = pos;
+        this.cylinder.visibility = 0;
     }
 
     getCylinder() {

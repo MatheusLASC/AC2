@@ -14,4 +14,8 @@ class Meshes {
     getMesh() {
         return this.meshes;
     }
+
+    removeMesh() {
+        this.meshes.dispose();
+    }
 }

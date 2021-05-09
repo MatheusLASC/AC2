@@ -1,7 +1,7 @@
 class Hero {
     hero = null;
 
-    constructor(cam, scene, bar) {
+    constructor(cam, scene, bar, spheres) {
         var inputMap = {};
             scene.actionManager = new BABYLON.ActionManager(scene);
             scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
@@ -13,7 +13,6 @@ class Hero {
 
         BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb").then((result) => {
            this.hero = result.meshes[0];  
-
            var posHero = new BABYLON.Vector3(0, -1.98, 0);
            var sclHero = new BABYLON.Vector3(0.05,0.05,0.05);
             
@@ -38,24 +37,44 @@ class Hero {
             const idleAnim = scene.getAnimationGroupByName("Idle");
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
-            //scene.registerBeforeRender(function () {});
+            
+            var bIndex = 0; 
 
             //Rendering loop (executed for everyframe)
             scene.onBeforeRenderObservable.add(() => {
                 var keydown = false;
-
                 if (inputMap["w"]) {
+                    if(bIndex < 10){
+                        if (this.hero.intersectsMesh(spheres[bIndex].getSphere(), false)) {
+                            spheres[bIndex].colectSound(scene);
+                            spheres[bIndex].animateSphere();
+                            spheres[bIndex].removeAll();
+                            bIndex = bIndex+1;
+                        }    
+                    }
+
                     if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
                         bar.explodeBar(bar.getCylinder());
                         bar.explosionSound(scene);
                         bar.removeAll();
                     } 
-                    this.hero.position.y = -1.98;
+
+                    //this.hero.position.y = -1.98;
                     this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(heroSpeed));
                     keydown = true;
                 }
                 if (inputMap["s"]) {
+                    if(bIndex < 10){
+                        if (this.hero.intersectsMesh(spheres[bIndex].getSphere(), false)) {
+                            spheres[bIndex].colectSound(scene);
+                            spheres[bIndex].removeAll(bIndex);;
+                            bIndex = bIndex+1;
+                        }    
+                    }
+
                     if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
+                        bar.explodeBar(bar.getCylinder());
+                        bar.explosionSound(scene);
                         bar.removeAll();
                     } 
                     this.hero.position.y = -1.98;
