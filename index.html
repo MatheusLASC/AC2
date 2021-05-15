@@ -53,6 +53,8 @@
         var scene = null;
         var sceneToRender = null;
         var spheres = [];
+        var bar;
+        var player;
 
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
         const createScene = function () {
@@ -77,28 +79,43 @@
            obj4 = new Knux("/assets/meshes/", "ugandan-knuckles.babylon", pos4, rot4, scale4);
            
 
-            /*---barril 1---*/
-            barRot = new BABYLON.Vector3(0, 0 , 0);
-            barPos = new BABYLON.Vector3(-1, -2, 0);
-            barScl =  new BABYLON.Vector3(0.01,0.01,0.01);
-           
-            var bar = new Barrel("https://models.babylonjs.com/", "ExplodingBarrel.glb", barPos, barRot, barScl,0);
-            /*===barril 1===*/
-
             //Cilindro para área útil
             createLimit(16.5);
             //cilindro//            
         
-            spheres = createCollectibles();
-            
-            var player = new Hero(cam,scene,bar,spheres);
+            createGameObjects();
+           player = new Hero(cam,scene,bar,spheres);
+           //alter posição em y caso necessário
+           playerZero();
+
          
+        
             /*--utilizado para debugar, comente para rodar "normal"--*/
             //scene.debugLayer.show();
             
             return scene;
         };
         
+        function createGameObjects()
+        {
+            
+            /*---barril 1---*/
+            barRot = new BABYLON.Vector3(0, 0 , 0);
+            barPos = new BABYLON.Vector3(-1, -2, 0);
+            barScl =  new BABYLON.Vector3(0.01,0.01,0.01);
+           
+            bar = new Barrel("https://models.babylonjs.com/", "ExplodingBarrel.glb", barPos, barRot, barScl,0);
+            /*===barril 1===*/
+
+            spheres = createCollectibles();
+
+        }
+
+        function playerZero()
+        {
+            player.position = new BABYLON.Vector3(0,2,0)
+        }
+
         function createLimit(num) {
             cylinderScl = new BABYLON.Vector3(num,-3,num);
             var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height:2});

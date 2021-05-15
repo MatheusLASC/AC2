@@ -1,5 +1,7 @@
 class Hero {
     hero = null;
+    bIndex = 0;
+    reinicia = false;
 
     constructor(cam, scene, bar, spheres) {
         var inputMap = {};
@@ -37,22 +39,34 @@ class Hero {
             const idleAnim = scene.getAnimationGroupByName("Idle");
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
-            
-            var bIndex = 0; 
 
             //Rendering loop (executed for everyframe)
             scene.onBeforeRenderObservable.add(() => {
                 var keydown = false;
-                if (inputMap["w"]) {
-                    if(bIndex < 10){
-                        if (this.hero.intersectsMesh(spheres[bIndex].getSphere(), false)) {
-                            spheres[bIndex].colectSound(scene);
-                            spheres[bIndex].animateSphere();
-                            spheres[bIndex].removeAll();
-                            bIndex = bIndex+1;
-                        }    
-                    }
 
+                if(this.bIndex==10){
+                    sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, true);
+                    keydown = true;
+                    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+                    var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Reiniciar - Pontos da Rodada: " + this.bIndex);
+                    button1.width = "350px"
+                    button1.height = "40px";
+                    button1.color = "white";
+                    button1.cornerRadius = 20;
+                    button1.background = "green";
+                    button1.top = 50;
+                    button1.left = 100;
+                    advancedTexture.addControl(button1);
+                }
+
+                if (inputMap["w"] && this.bIndex < 10) {
+                    if (this.hero.intersectsMesh(spheres[this.bIndex].getSphere(), false)) {
+                        spheres[this.bIndex].colectSound(scene);
+                        spheres[this.bIndex].animateSphere();
+                        spheres[this.bIndex].removeAll();
+                        this.bIndex = this.bIndex+1;
+                    }    
+                    
                     if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
                         bar.explodeBar(bar.getCylinder());
                         bar.explosionSound(scene);
@@ -63,15 +77,14 @@ class Hero {
                     this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(heroSpeed));
                     keydown = true;
                 }
-                if (inputMap["s"]) {
-                    if(bIndex < 10){
-                        if (this.hero.intersectsMesh(spheres[bIndex].getSphere(), false)) {
-                            spheres[bIndex].colectSound(scene);
-                            spheres[bIndex].removeAll(bIndex);;
-                            bIndex = bIndex+1;
-                        }    
-                    }
-
+                if (inputMap["s"] && this.bIndex < 10) {
+                    
+                    if (this.hero.intersectsMesh(spheres[this.bIndex].getSphere(), false)) {
+                        spheres[this.bIndex].colectSound(scene);
+                        spheres[this.bIndex].removeAll(this.bIndex);;
+                        this.bIndex = this.bIndex+1;
+                    }    
+                    
                     if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
                         bar.explodeBar(bar.getCylinder());
                         bar.explosionSound(scene);
@@ -83,11 +96,11 @@ class Hero {
 
                     keydown = true;
                 }
-                if (inputMap["a"]) {
+                if (inputMap["a"] && this.bIndex < 10) {
                     this.hero.rotate(BABYLON.Vector3.Up(), -heroRotationSpeed);
                     keydown = true;
                 }
-                if (inputMap["d"]) {
+                if (inputMap["d"] && this.bIndex < 10) {
                     this.hero.rotate(BABYLON.Vector3.Up(), heroRotationSpeed);
                     keydown = true;
                 }
@@ -103,8 +116,7 @@ class Hero {
                             //Walk backwards
                             walkBackAnim.start(true, 1.0, walkBackAnim.from, walkBackAnim.to, false);
                         }
-                        else if
-                            (inputMap["b"]) {
+                        else if(inputMap["b"]) {
                             //Samba!
                             sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
                         }
@@ -115,7 +127,6 @@ class Hero {
                     }
                 }
                 else {
-
                     if (animating) {
                         //Default animation is idle when no key is down     
                         idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
@@ -134,6 +145,3 @@ class Hero {
     }// constructor 
 
 }
-
-/*
-            */
