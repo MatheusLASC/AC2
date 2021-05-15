@@ -55,23 +55,20 @@
         var spheres = [];
         var bar;
         var player;
+        var isGameover = false;
 
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
         const createScene = function () {
-
             scene = new BABYLON.Scene(engine);
 
-            // Enable gravity on the scene. Should be similar to earth's gravity. 
-            scene.gravity = new BABYLON.Vector3(0, -0.98, 0);
-            // Enable collisions globally. 
-            scene.collisionsEnabled = true;
+           // scene.gravity = new BABYLON.Vector3(0, -0.98, 0);
+            //scene.collisionsEnabled = true;
             
             cam = createLightAndCamera();
-            createSkybox();
-            createHighMap();
-            createObjs();            
+            createSkybox(25);
+            createHighMap(25);
+            //createObjs();            
            
-           //knux
            rot4 = new BABYLON.Vector3(0, 4, 0);
            pos4 = new BABYLON.Vector3(0.2, -2, -2.8);
            scale4 =  new BABYLON.Vector3(0.1,0.1,0.1);
@@ -82,14 +79,37 @@
             //Cilindro para área útil
             createLimit(16.5);
             //cilindro//            
-        
-            createGameObjects();
-           player = new Hero(cam,scene,bar,spheres);
-           //alter posição em y caso necessário
-           playerZero();
 
-         
-        
+           createGameObjects();
+           player = new Hero(cam,scene,bar,spheres);
+           
+           scene.onAfterRenderObservable.add(() => {
+                let i = player.getIndex();
+                if(i == 10) {
+                    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+                    var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Reiniciar - Pontos da Rodada: " + i);
+                    button1.width = "350px"
+                    button1.height = "40px";
+                    button1.color = "white";
+                    button1.cornerRadius = 20;
+                    button1.background = "green";
+                    button1.top = 50;
+                    button1.left = 100;
+                    advancedTexture.addControl(button1);
+                    button1.onPointerUpObservable.add(function() {
+                        player.setHeroPos();
+                        isGameover = true;
+                        player.setIndex(0);
+                        button1.dispose();
+                        destBarrel = player.getBarrelDest();
+                    });
+                }
+                if(isGameover==true){
+                    isGameover=false;
+                    createGameObjects();
+                }
+           });
+
             /*--utilizado para debugar, comente para rodar "normal"--*/
             //scene.debugLayer.show();
             
@@ -99,21 +119,15 @@
         function createGameObjects()
         {
             
-            /*---barril 1---*/
+           /*---barril---*/
             barRot = new BABYLON.Vector3(0, 0 , 0);
             barPos = new BABYLON.Vector3(-1, -2, 0);
             barScl =  new BABYLON.Vector3(0.01,0.01,0.01);
-           
             bar = new Barrel("https://models.babylonjs.com/", "ExplodingBarrel.glb", barPos, barRot, barScl,0);
-            /*===barril 1===*/
+           /*===barril===*/
+        
 
             spheres = createCollectibles();
-
-        }
-
-        function playerZero()
-        {
-            player.position = new BABYLON.Vector3(0,2,0)
         }
 
         function createLimit(num) {
@@ -124,12 +138,12 @@
             cylinder.visibility = 0;
         }
 
-        function createHighMap()
+        function createHighMap(n)
         {
             const largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat");
             largeGroundMat.diffuseTexture = new BABYLON.Texture("/assets/images/arena.jpg");
     
-            const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "/assets/images/mapa.jpeg", {width:20, height:20, subdivisions: 10, minHeight:0, maxHeight: 10});
+            const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "/assets/images/mapa.jpeg", {width:n, height:n, subdivisions: 10, minHeight:0, maxHeight: 10});
             largeGround.material = largeGroundMat;
 
             largeGround.position.y = -2;
@@ -143,8 +157,8 @@
             return camera;
         }
 
-        function createSkybox () {
-            const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:20}, scene);
+        function createSkybox (n) {
+            const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:n}, scene);
             const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
             skyboxMaterial.backFaceCulling = false;
             skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("/assets/images/skybox4", scene);

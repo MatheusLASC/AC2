@@ -2,7 +2,7 @@ class Hero {
     hero = null;
     bIndex = 0;
     reinicia = false;
-
+    
     constructor(cam, scene, bar, spheres) {
         var inputMap = {};
             scene.actionManager = new BABYLON.ActionManager(scene);
@@ -28,7 +28,7 @@ class Hero {
             cam.target = this.hero;
 
             //Hero character variables 
-            var heroSpeed = 0.05;
+            var heroSpeed = 0.1;
             var heroSpeedBackwards = 0.03;
             var heroRotationSpeed = 0.1;
 
@@ -47,16 +47,6 @@ class Hero {
                 if(this.bIndex==10){
                     sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, true);
                     keydown = true;
-                    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-                    var button1 = BABYLON.GUI.Button.CreateSimpleButton("but1", "Reiniciar - Pontos da Rodada: " + this.bIndex);
-                    button1.width = "350px"
-                    button1.height = "40px";
-                    button1.color = "white";
-                    button1.cornerRadius = 20;
-                    button1.background = "green";
-                    button1.top = 50;
-                    button1.left = 100;
-                    advancedTexture.addControl(button1);
                 }
 
                 if (inputMap["w"] && this.bIndex < 10) {
@@ -89,6 +79,7 @@ class Hero {
                         bar.explodeBar(bar.getCylinder());
                         bar.explosionSound(scene);
                         bar.removeAll();
+
                     } 
                     this.hero.position.y = -1.98;
                     this.heroSpeedBackwards = 0.03
@@ -144,4 +135,15 @@ class Hero {
         });
     }// constructor 
 
+    getIndex() {
+        return this.bIndex;
+    }
+
+    setIndex(n) {
+        this.bIndex = n;
+    }
+
+    setHeroPos(){
+        this.hero.position = new BABYLON.Vector3(0, -1.98, 0);
+    }
 }
