@@ -22,10 +22,7 @@
     <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
     <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
-    <script src="Meshes.js"></script> 
-    <script src="Hero.js"></script>
-    <script src="barrel.js"></script>
-    <script src="Colect.js"></script>
+
 
     <style>
         html,
@@ -69,7 +66,7 @@
             cam = createLightAndCamera();
             createSkybox(25);
             createHighMap(25);
-            //createObjs();            
+            createObjs();            
            
            rot4 = new BABYLON.Vector3(0, 4, 0);
            pos4 = new BABYLON.Vector3(0.2, -2, -2.8);
@@ -103,7 +100,6 @@
                         isGameover = true;
                         player.setIndex(0);
                         button1.dispose();
-                        destBarrel = player.getBarrelDest();
                     });
                 }
                 if(isGameover==true){
@@ -626,7 +622,6 @@ class Colect extends Meshes{
 
         scene.beginAnimation(sphereRB, 0, 30, true);
     }//animateSphere
-
 
 }
 
