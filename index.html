@@ -22,10 +22,6 @@
     <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
     <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
-    <script src="Meshes.js"></script> 
-    <script src="Hero.js"></script>
-    <script src="barrel.js"></script>
-    <script src="Colect.js"></script>
 
     <style>
         html,
@@ -69,13 +65,13 @@
             cam = createLightAndCamera();
             createSkybox(25);
             createHighMap(25);
-            //createObjs();            
+            createObjs();            
            
            rot4 = new BABYLON.Vector3(0, 4, 0);
            pos4 = new BABYLON.Vector3(0.2, -2, -2.8);
            scale4 =  new BABYLON.Vector3(0.1,0.1,0.1);
            
-           obj4 = new Knux("/assets/meshes/", "ugandan-knuckles.babylon", pos4, rot4, scale4);
+           obj4 = new Knux("meshes/", "ugandan-knuckles.babylon", pos4, rot4, scale4);
            
 
             //Cilindro para área útil
@@ -103,7 +99,6 @@
                         isGameover = true;
                         player.setIndex(0);
                         button1.dispose();
-                        destBarrel = player.getBarrelDest();
                     });
                 }
                 if(isGameover==true){
@@ -143,9 +138,9 @@
         function createHighMap(n)
         {
             const largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat");
-            largeGroundMat.diffuseTexture = new BABYLON.Texture("/assets/images/arena.jpg");
+            largeGroundMat.diffuseTexture = new BABYLON.Texture("images/arena.jpg");
     
-            const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "/assets/images/mapa.jpeg", {width:n, height:n, subdivisions: 10, minHeight:0, maxHeight: 10});
+            const largeGround = BABYLON.MeshBuilder.CreateGroundFromHeightMap("largeGround", "images/mapa.jpeg", {width:n, height:n, subdivisions: 10, minHeight:0, maxHeight: 10});
             largeGround.material = largeGroundMat;
 
             largeGround.position.y = -2;
@@ -163,7 +158,7 @@
             const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:n}, scene);
             const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
             skyboxMaterial.backFaceCulling = false;
-            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("/assets/images/skybox4", scene);
+            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("images/skybox4", scene);
             skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
             skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
             skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
@@ -205,7 +200,7 @@
             /*---MESHES---*/
            //dragão
            var dragonMat = new BABYLON.StandardMaterial("dragon",scene);
-           dragonMat.ambientTexture = new BABYLON.Texture("/assets/images/dragonTexture.jpg", scene);
+           dragonMat.ambientTexture = new BABYLON.Texture("images/dragonTexture.jpg", scene);
            
            rot = new BABYLON.Vector3(0, 150, 0);
            pos = new BABYLON.Vector3(3.4, -2, 0);
@@ -219,7 +214,7 @@
            pos2 = new BABYLON.Vector3(0.5, -2, 2);
            scale2 =  new BABYLON.Vector3(3,3,3);
            
-           obj2 = new Meshes("/assets/meshes/", "StanfordBunny.obj", pos2, rot2, scale2,0);
+           obj2 = new Meshes("meshes/", "StanfordBunny.obj", pos2, rot2, scale2,0);
             
 
            //pedra
@@ -227,17 +222,17 @@
            pos3 = new BABYLON.Vector3(1, -2, 2);
            scale3 =  new BABYLON.Vector3(0.05,0.05,0.05);
            
-           obj3 = new Meshes("/assets/meshes/Free rock/", "Rock_1.obj", pos3, rot3, scale3,0);
+           obj3 = new Meshes("meshes/Free rock/", "Rock_1.obj", pos3, rot3, scale3,0);
 
            //estátua estranha
            var statueMat = new BABYLON.StandardMaterial("statue",scene);
-           statueMat.ambientTexture = new BABYLON.Texture("/assets/images/goldTexture.jpg", scene);
+           statueMat.ambientTexture = new BABYLON.Texture("images/goldTexture.jpg", scene);
 
            rot5 = new BABYLON.Vector3(0, -Math.PI/2 , 0);
            pos5 = new BABYLON.Vector3(-4, -2, 0);
            scale5 =  new BABYLON.Vector3(0.01,0.01,0.01);
            
-           obj5 = new Meshes("/assets/meshes/MeshesLibrary-master/Channel9/", "Channel9.stl", pos5, rot5, scale5,0, statueMat);
+           obj5 = new Meshes("meshes/MeshesLibrary-master/Channel9/", "Channel9.stl", pos5, rot5, scale5,0, statueMat);
             
 
            //caveira
@@ -245,18 +240,18 @@
            pos1 = new BABYLON.Vector3(1, -0.9, -3);
            scale1 =  new BABYLON.Vector3(0.01,0.01,0.01);
            
-           obj1 = new Meshes( "/assets/meshes/", "skull.babylon", pos1, rot1, scale1,0);
+           obj1 = new Meshes( "meshes/", "skull.babylon", pos1, rot1, scale1,0);
              
 
            //cubo 
            var cubeMat = new BABYLON.StandardMaterial("cube",scene);
-           cubeMat.ambientTexture = new BABYLON.Texture("/assets/images/iceTexture.jpg", scene);
+           cubeMat.ambientTexture = new BABYLON.Texture("images/iceTexture.jpg", scene);
 
            rot6 = new BABYLON.Vector3(0, Math.PI / 2, 0);
            pos6 = new BABYLON.Vector3(-1, -1.7, -3);
            scale6 =  new BABYLON.Vector3(1,1,1);
            
-           obj6 = new Meshes("/assets/meshes/MeshesLibrary-master/", "roundedCube.glb", pos6, rot6, scale6, 1, cubeMat);
+           obj6 = new Meshes("meshes/MeshesLibrary-master/", "roundedCube.glb", pos6, rot6, scale6, 1, cubeMat);
            obj6.material = cubeMat;
            /*===meshes===*/
         }
@@ -301,6 +296,333 @@
                 });
             }
         }
+
+        class Meshes {
+    meshes = null;
+
+    constructor(url,sceneFile, pos, rot, scale, meshNum, mat) {
+        BABYLON.SceneLoader.ImportMeshAsync("", url, sceneFile).then((result) => {
+            this.meshes = result.meshes[meshNum];       
+            this.meshes.position = pos;
+            this.meshes.rotation = rot;
+            this.meshes.scaling = scale;
+            this.meshes.material = mat;
+        });
+    }
+
+    getMesh() {
+        return this.meshes;
+    }
+
+    removeMesh() {
+        this.meshes.dispose();
+    }
+}
+
+class Hero {
+    hero = null;
+    bIndex = 0;
+    reinicia = false;
+    
+    constructor(cam, scene, bar, spheres) {
+        var inputMap = {};
+            scene.actionManager = new BABYLON.ActionManager(scene);
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
+                inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
+                inputMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
+
+        BABYLON.SceneLoader.ImportMeshAsync("", "https://assets.babylonjs.com/meshes/", "HVGirl.glb").then((result) => {
+           this.hero = result.meshes[0];  
+           var posHero = new BABYLON.Vector3(0, -1.98, 0);
+           var sclHero = new BABYLON.Vector3(0.05,0.05,0.05);
+            
+            //Scale the model down        
+            this.hero.scaling.scaleInPlace(0.1);
+            this.hero.position = posHero;
+            this.hero.scaling = sclHero;
+                
+            
+            //Lock camera on the character 
+            cam.target = this.hero;
+
+            //Hero character variables 
+            var heroSpeed = 0.1;
+            var heroSpeedBackwards = 0.03;
+            var heroRotationSpeed = 0.1;
+
+            var animating = true;
+
+            const walkAnim = scene.getAnimationGroupByName("Walking");
+            const walkBackAnim = scene.getAnimationGroupByName("WalkingBack");
+            const idleAnim = scene.getAnimationGroupByName("Idle");
+            const sambaAnim = scene.getAnimationGroupByName("Samba");
+
+
+            //Rendering loop (executed for everyframe)
+            scene.onBeforeRenderObservable.add(() => {
+                var keydown = false;
+
+                if(this.bIndex==10){
+                    sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, true);
+                    keydown = true;
+                }
+
+                if (inputMap["w"] && this.bIndex < 10) {
+                    if (this.hero.intersectsMesh(spheres[this.bIndex].getSphere(), false)) {
+                        spheres[this.bIndex].colectSound(scene);
+                        spheres[this.bIndex].animateSphere();
+                        spheres[this.bIndex].removeAll();
+                        this.bIndex = this.bIndex+1;
+                    }    
+                    
+                    if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
+                        bar.explodeBar(bar.getCylinder());
+                        bar.explosionSound(scene);
+                        bar.removeAll();
+                    } 
+
+                    //this.hero.position.y = -1.98;
+                    this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(heroSpeed));
+                    keydown = true;
+                }
+                if (inputMap["s"] && this.bIndex < 10) {
+                    
+                    if (this.hero.intersectsMesh(spheres[this.bIndex].getSphere(), false)) {
+                        spheres[this.bIndex].colectSound(scene);
+                        spheres[this.bIndex].removeAll(this.bIndex);;
+                        this.bIndex = this.bIndex+1;
+                    }    
+                    
+                    if (this.hero.intersectsMesh(bar.getCylinder(), false)) {
+                        bar.explodeBar(bar.getCylinder());
+                        bar.explosionSound(scene);
+                        bar.removeAll();
+
+                    } 
+                    this.hero.position.y = -1.98;
+                    this.heroSpeedBackwards = 0.03
+                    this.hero.moveWithCollisions(this.hero.forward.scaleInPlace(-heroSpeedBackwards));
+
+                    keydown = true;
+                }
+                if (inputMap["a"] && this.bIndex < 10) {
+                    this.hero.rotate(BABYLON.Vector3.Up(), -heroRotationSpeed);
+                    keydown = true;
+                }
+                if (inputMap["d"] && this.bIndex < 10) {
+                    this.hero.rotate(BABYLON.Vector3.Up(), heroRotationSpeed);
+                    keydown = true;
+                }
+                if (inputMap["b"]) {
+                    keydown = true;
+                }
+
+                //Manage animations to be played  
+                if (keydown) {
+                    if (!animating) {
+                        animating = true;
+                        if (inputMap["s"]) {
+                            //Walk backwards
+                            walkBackAnim.start(true, 1.0, walkBackAnim.from, walkBackAnim.to, false);
+                        }
+                        else if(inputMap["b"]) {
+                            //Samba!
+                            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+                        }
+                        else {
+                            //Walk
+                            walkAnim.start(true, 1.0, walkAnim.from, walkAnim.to, false);
+                        }
+                    }
+                }
+                else {
+                    if (animating) {
+                        //Default animation is idle when no key is down     
+                        idleAnim.start(true, 1.0, idleAnim.from, idleAnim.to, false);
+
+                        //Stop all animations besides Idle Anim when no key is down
+                        sambaAnim.stop();
+                        walkAnim.stop();
+                        walkBackAnim.stop();
+
+                        //Ensure animation are played only once per rendering loop
+                        animating = false;
+                    }
+                }
+            });
+        });
+    }// constructor 
+
+    getIndex() {
+        return this.bIndex;
+    }
+
+    setIndex(n) {
+        this.bIndex = n;
+    }
+
+    setHeroPos(){
+        this.hero.position = new BABYLON.Vector3(0, -1.98, 0);
+    }
+}
+
+class Barrel extends Meshes{
+    cylinder = null
+    isDestroyied = false;
+    sound = null;
+
+    constructor(url,sceneFile, pos, rot, scale, meshNum, mat) {
+        super(url,sceneFile, pos, rot, scale, meshNum, mat);
+
+        var cylinderScl = new BABYLON.Vector3(0.4,1, 0.4);
+
+        this.cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", {height:0.1});
+
+        this.cylinder.scaling = cylinderScl;
+        this.cylinder.position = pos;
+        this.cylinder.visibility = 0;
+    }
+
+    getCylinder() {
+        return this.cylinder;
+    }
+
+    explosionSound(scene){
+        if(this.isDestroyied == false){
+            this.sound = new BABYLON.Sound("som", "sounds/explosion.wav", scene, null, {loop: false, autoplay: true });
+            this.sound.play();
+        }    
+    }
+
+    removeAll() {
+        if(this.isDestroyied == false){
+            var aux = super.getMesh();
+            aux.dispose();
+            this.cylinder.dispose();
+            this.isDestroyied = true;
+        }
+    }
+
+    explodeBar(box){
+        if(this.isDestroyied == false){
+            // Create a particle system - qnt max vivas
+            var particleSystem = new BABYLON.ParticleSystem("particles", 1000, scene);
+
+            //Texture of each particle - local onde as particulas sao criadas, pode-se add uma imagem
+            particleSystem.particleTexture = new BABYLON.Texture("images/fire.png", scene);
+            
+            // Where the particles come from
+            particleSystem.emitter = new BABYLON.Vector3(box.position.x, box.position.y, box.position.z); // the starting object, the emitter - ponto central (em relação a toda a cena)
+            particleSystem.minEmitBox = new BABYLON.Vector3(0, 0, 0); // Starting all from - pontos de origem
+            particleSystem.maxEmitBox = new BABYLON.Vector3(0, 0, 0); // To... - pontos finais
+
+            // Size of each particle (random between...
+            particleSystem.minSize = 0.05;
+            particleSystem.maxSize = 0.05;
+
+            // Life time of each particle (random between...
+            particleSystem.minLifeTime = 2;
+            particleSystem.maxLifeTime = 3;
+
+            // Emission rate
+            particleSystem.emitRate = 500;
+
+            // Blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD
+            particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_STANDARD;
+
+            // Set the gravity of all particles
+            particleSystem.gravity = new BABYLON.Vector3(0, -5, 0);
+
+            // Direction of each particle after it has been emitted
+            particleSystem.direction1 = new BABYLON.Vector3(2, 4, 2);
+            particleSystem.direction2 = new BABYLON.Vector3(-2, -2, -2);
+
+            // Angular speed, in radians
+            particleSystem.minAngularSpeed = Math.PI;
+            particleSystem.maxAngularSpeed = 2*Math.PI;
+
+            // Speed
+            particleSystem.minEmitPower = 1;
+            particleSystem.maxEmitPower = 2;
+            particleSystem.updateSpeed = 0.025;
+            
+            particleSystem.start(); 
+            particleSystem.targetStopDuration = 0.3;
+
+        }//if destroyied
+
+    }
+
+}
+
+class Colect extends Meshes{
+    isPaused = true;
+    sound = null;
+    sphere = null;
+    ball = null;
+    sNum = 0;
+    
+    constructor(i, url,sceneFile, pos, rot, scale, meshNum, mat) {
+        super(url,sceneFile, pos, rot, scale, meshNum, mat);
+        
+        this.sNum = i;
+        this.sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {});
+        this.sphere.visibility = 0;
+        this.sphere.position = pos;
+        this.sphere.scaling = scale;
+        
+    }
+
+
+    getSphere() {
+        return this.sphere;
+    }
+
+    colectSound(scene){
+        this.sound = new BABYLON.Sound("som", "sounds/colected.wav", scene, null, {loop: false, autoplay: true});
+        this.sound.play();   
+    }
+
+    async removeAll() {
+        await new Promise((resolve) => {
+            setTimeout(resolve,1000);
+        });
+        var aux = super.getMesh();
+        aux.dispose();
+        this.sphere.dispose();   
+        return 1;                     
+    }//removeAll
+
+    animateSphere() {
+        var sphereRB = super.getMesh();
+        const animSphere = new BABYLON.Animation("wheelAnimation", "rotation.y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+        const sphereKeys = []; 
+
+        sphereKeys.push({
+            frame: 0,
+            value: 0
+        });
+
+        sphereKeys.push({
+            frame: 30,
+            value: 2 * Math.PI
+        });
+
+        //set the keys
+        animSphere.setKeys(sphereKeys);
+
+        //Link this animation to a wheel
+        sphereRB.animations = [];
+        sphereRB.animations.push(animSphere);
+
+        scene.beginAnimation(sphereRB, 0, 30, true);
+    }//animateSphere
+
+}
 
     </script>
 </body>
